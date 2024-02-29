@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import genereateTokenAndSetCookie from "../utilities/generatejwt.js";
 export const signupController = async (req, res) => {
   try {
     const { fullname, username, password, confirmpassword, gender } = req.body;
@@ -31,6 +32,8 @@ export const signupController = async (req, res) => {
       profilePicture: gender === "male" ? boyprofilepic : girlprofilepic,
     });
     if (newUser) {
+      //Generating jwt token here
+       genereateTokenAndSetCookie(newUser._id,res);
       await newUser.save();
       res.status(201).json({
         _id: newUser._id,
