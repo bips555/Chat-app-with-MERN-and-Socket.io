@@ -6,7 +6,4 @@ const router = express.Router();
 
 router.post("/send/:id",protectRoute,sendMessageController);
 
-
-
-
 export default router;

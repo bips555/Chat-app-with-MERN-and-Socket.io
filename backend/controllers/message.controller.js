@@ -1,8 +1,9 @@
 import Conversation from "../models/conversation.model.js";
-
+import Message from "../models/message.model.js";
 export const sendMessageController = async (req, res) => {
   try {
     const { message } = req.body;
+    
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
 
@@ -18,15 +19,15 @@ if(!conversation)
     })
 }
 
-const newMessage = new message({
+const newMessage = new Message({
     senderId:senderId,
     receiverId:receiverId,
-    message
+    message:message
 })
 
 if(newMessage)
 {
-conversation.mesages.push(newMessage._id)
+conversation.messages.push(newMessage._id)
 }
 
 res.status(201).json({newMessage});
