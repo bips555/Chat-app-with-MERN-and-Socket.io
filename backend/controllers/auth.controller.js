@@ -33,13 +33,14 @@ export const signupController = async (req, res) => {
     });
     if (newUser) {
       //Generating jwt token here
-       genereateTokenAndSetCookie(newUser._id,res);
+      genereateTokenAndSetCookie(newUser._id, res);
       await newUser.save();
       res.status(201).json({
         _id: newUser._id,
         fullname: newUser.fullname,
         username: newUser.username,
         profilePicture: newUser.profilePicture,
+        message: "user registered successfully",
       });
     } else {
       res.status(400).json({
@@ -47,10 +48,40 @@ export const signupController = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log("error in server", error.message);
+    console.log("Error in SignupController", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
 };
-export const loginController = (req, res) => {
-  res.send("signup user");
+export const loginController = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+    const isPasswordCorrect = bcrypt.compare(password, user?.password || "");
+
+    if (!user || !isPasswordCorrect) {
+      return res.status(400).json({ error: "Invalid Username or password" });
+    }
+else{
+    genereateTokenAndSetCookie(user._id, res);
+    res.status(200).json({
+      _id: user._id,
+      fullname: user.fullname,
+      username: user.username,
+      profilePicture: user.profilePicture,
+      message: "User logged in successfully",
+    });
+  }
+ }catch (error) {
+    console.log("Error in LoginController", error.message);
+    res.status(400).json({ error: "Internal server errror" });
+  }
+};
+export const logoutController = async (req, res) => {
+  try {
+    res.cookie("jwt","",{maxAge:0});
+    res.status(200).json({message:"Logged Out successfully"})
+  } catch (error) {
+    console.log("Error in LoginController", error.message);
+    res.status(400).json({ error: "Internal server errror" });
+  }
 };
