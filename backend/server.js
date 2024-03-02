@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes.js";
 import messageRoutes from "./routes/message.routes.js";
+import userRoutes from "./routes/user.route.js"
 import connectdb from "./mongodatabase/db.config.js";
 const app = express();
 
@@ -13,6 +14,8 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/users", userRoutes);
+
 // to generalize the routes with the above routing convention
 
 // to parse the incoming requests into json format
