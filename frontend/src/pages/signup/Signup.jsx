@@ -13,7 +13,7 @@ const Signup = () => {
 
 const handleCheckBoxChange=(gender)=>
 {
-  setInputs({})
+  setInputs({...Inputs,gender})
 }
 
   const handleSubmit = (e) => {
@@ -87,7 +87,7 @@ const handleCheckBoxChange=(gender)=>
                 }
               />
             </div>
-            <GenderCheckBox />
+            <GenderCheckBox onCheckboxChange={handleCheckBoxChange} selectedGender = {Inputs.gender}/>
             <Link
               to="/login"
               className="text-sm hover:underline hover:text-blue-600 inline-block"
