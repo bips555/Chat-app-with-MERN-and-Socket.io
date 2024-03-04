@@ -56,30 +56,32 @@ export const loginController = async (req, res) => {
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
-    const isPasswordCorrect = bcrypt.compare(password, user?.password || "");
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      user?.password || ""
+    );
 
     if (!user || !isPasswordCorrect) {
-      return res.status(400).json({ error: "Invalid Username or password" });
+      return res.status(400).json({ error: "Invalid username or password" });
     }
-else{
+
     genereateTokenAndSetCookie(user._id, res);
+
     res.status(200).json({
       _id: user._id,
-      fullname: user.fullname,
+      fullName: user.fullname,
       username: user.username,
       profilePicture: user.profilePicture,
-      message: "User logged in successfully",
     });
-  }
- }catch (error) {
-    console.log("Error in LoginController", error.message);
-    res.status(400).json({ error: "Internal server errror" });
+  } catch (error) {
+    console.log("Error in login controller", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 export const logoutController = async (req, res) => {
   try {
-    res.cookie("jwt","",{maxAge:0});
-    res.status(200).json({message:"Logged Out successfully"})
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ message: "Logged Out successfully" });
   } catch (error) {
     console.log("Error in LoginController", error.message);
     res.status(400).json({ error: "Internal server errror" });
